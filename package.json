@@ -1,9 +1,11 @@
 {
+  "type": "module",
   "name": "digital-art-marketplace-node-server-app",
   "version": "1.0.0",
   "description": "Node.js HTTP Web Server for the Digital Art Marketplace application",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +23,10 @@
   "bugs": {
     "url": "https://github.com/Xiaohan-Qin/digital-art-marketplace-node-server-app/issues"
   },
-  "homepage": "https://github.com/Xiaohan-Qin/digital-art-marketplace-node-server-app#readme"
+  "homepage": "https://github.com/Xiaohan-Qin/digital-art-marketplace-node-server-app#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.5"
+  }
 }
