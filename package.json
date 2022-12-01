@@ -1,0 +1,25 @@
+{
+  "name": "digital-art-marketplace-node-server-app",
+  "version": "1.0.0",
+  "description": "Node.js HTTP Web Server for the Digital Art Marketplace application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xiaohan-Qin/digital-art-marketplace-node-server-app.git"
+  },
+  "keywords": [
+    "Node",
+    "REST",
+    "Server",
+    "HTTP"
+  ],
+  "author": "Xiaohan Qin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Xiaohan-Qin/digital-art-marketplace-node-server-app/issues"
+  },
+  "homepage": "https://github.com/Xiaohan-Qin/digital-art-marketplace-node-server-app#readme"
+}
