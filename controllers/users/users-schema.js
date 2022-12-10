@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import isEmail from "validator/lib/isEmail.js";
 
+mongoose.set("strictQuery", true);
+
 const usersSchema = mongoose.Schema(
   {
     username: {
