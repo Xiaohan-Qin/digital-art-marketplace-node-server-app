@@ -4,13 +4,34 @@ import caches from "../../cache/collection-cache.js";
 
 const NFTPORT_API_KEY = process.env.NFTPORT_API_KEY;
 
-// export let caches = {
-//   "0xed5af388653567af2f388e6224dc7c4b3241c544": [],
-//   "0xe8be8b85a2ad7f29de32edbabb87efb109fa5b82": [],
-//   "0x0a278d4c904c4ce1bba91cdc0c3ec2b14307c67c": [],
-//   "0x524cab2ec69124574082676e6f654a18df49a048": [],
-//   "0xb16dfd9aaaf874fcb1db8a296375577c1baa6f21": [],
-// };
+/**
+ * Get 25 NFTs of a certain collection
+ * Example client request:
+ * /api/shop/0xe8be8b85a2ad7f29de32edbabb87efb109fa5b82/1
+ * @param {*} req Client request with the contractAddress and page as a query param
+ * @param {*} res Server response containing 25 NFTs
+ */
+const getShopPage = async (req, res) => {
+  const contractAddress = req.params.contractAddress;
+  const page = req.params.page;
+
+  // Check if the cache has the data
+  if (page * 25 <= caches[contractAddress].length) {
+    const startIndex = (page - 1) * 25;
+    const endIndex = startIndex + 25;
+    res.json(caches[contractAddress].slice(startIndex, endIndex));
+    console.log("cache hit");
+    return;
+  }
+
+  // Else fetch the data from NFTPort
+  try {
+    const nftArray = await getOneCollection(contractAddress, page);
+    res.json(nftArray);
+  } catch (err) {
+    res.status(503).json({ message: err.message });
+  }
+};
 
 /**
  * Internal helper function for getShopPage
@@ -42,35 +63,6 @@ const getOneCollection = async (contractAddress, page) => {
   });
   console.log(caches[contractAddress].length);
   return response.data.nfts;
-};
-
-/**
- * Get 25 NFTs of a certain collection
- * Example client request:
- * /api/shop/0xe8be8b85a2ad7f29de32edbabb87efb109fa5b82/1
- * @param {*} req Client request with the contractAddress and page as a query param
- * @param {*} res Server response containing 25 NFTs
- */
-const getShopPage = async (req, res) => {
-  const contractAddress = req.params.contractAddress;
-  const page = req.params.page;
-
-  // Check if the cache has the data
-  if (page * 25 <= caches[contractAddress].length) {
-    const startIndex = (page - 1) * 25;
-    const endIndex = startIndex + 25;
-    res.json(caches[contractAddress].slice(startIndex, endIndex));
-    console.log("cache hit");
-    return;
-  }
-
-  // Else fetch the data from NFTPort
-  try {
-    const nftArray = await getOneCollection(contractAddress, page);
-    res.json(nftArray);
-  } catch (err) {
-    res.status(503).json({ message: err.message });
-  }
 };
 
 export default (app) => {
