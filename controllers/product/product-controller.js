@@ -14,6 +14,7 @@ const NFTPORT_API_KEY = process.env.NFTPORT_API_KEY;
 const getOneProduct = async (req, res) => {
   const { contractAddress, tokenId } = req.params;
 
+  // Check if the cache has the data
   const result = caches[contractAddress].filter((nft) => {
     return nft.token_id === tokenId;
   });
@@ -23,6 +24,7 @@ const getOneProduct = async (req, res) => {
     return;
   }
 
+  // Else fetch the data from NFTPort
   try {
     const response = await axios.get(`https://api.nftport.xyz/v0/nfts/${contractAddress}/${tokenId}`, {
       params: {
@@ -32,11 +34,18 @@ const getOneProduct = async (req, res) => {
         Authorization: `${NFTPORT_API_KEY}`,
       },
     });
-    res.json(response.data.nft);
-    return;
+    const nft = response.data.nft;
+    res.json({
+      name: nft.metadata.name,
+      token_id: nft.token_id,
+      chain: "Ethereum",
+      token_standard: "ERC-721",
+      description: nft.metadata.description,
+      image: nft.cached_file_url,
+      create_date: nft.mint_date,
+    });
   } catch (err) {
     res.status(503).json({ message: err.message });
-    return;
   }
 };
 
@@ -68,8 +77,7 @@ const getOneTransaction = async (req, res) => {
       asset_type: transaction.price_details.asset_type,
       price: transaction.price_details.price,
       price_usd: transaction.price_details.price_usd,
-      timestamp: transaction.transaction_date,
-      marketplace: transaction.marketplace,
+      transaction_date: transaction.transaction_date,
     };
   });
   res.json(parsed_transactions);
