@@ -25,6 +25,10 @@ CollectionController(app);
 ShopController(app);
 ProductController(app);
 
+app.get('/', (req, res) => {
+  res.send('Welcome to Digital Art Marketplace Remote Server!')
+});
+
 app.listen(process.env.PORT || 4000, () => {
   console.log("Listening on port " + (process.env.PORT || 4000));
 });
