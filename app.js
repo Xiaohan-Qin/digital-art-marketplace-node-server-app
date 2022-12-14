@@ -9,6 +9,8 @@ import ProductController from "./controllers/product/product-controller.js";
 
 const CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 
+// fake push
+
 try {
   mongoose.connect(CONNECTION_STRING);
   console.log("Database connection successful!");
@@ -25,8 +27,8 @@ CollectionController(app);
 ShopController(app);
 ProductController(app);
 
-app.get('/', (req, res) => {
-  res.send('Welcome to Digital Art Marketplace Remote Server!')
+app.get("/", (req, res) => {
+  res.send("Welcome to Digital Art Marketplace Remote Server!");
 });
 
 app.listen(process.env.PORT || 4000, () => {
