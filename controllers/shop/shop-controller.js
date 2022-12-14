@@ -16,13 +16,13 @@ const getShopPage = async (req, res) => {
   const page = req.params.page;
 
   // Check if the cache has the data
-  if (page * 25 <= caches[contractAddress].length) {
-    const startIndex = (page - 1) * 25;
-    const endIndex = startIndex + 25;
-    res.json(caches[contractAddress].slice(startIndex, endIndex));
-    console.log("cache hit");
-    return;
-  }
+  // if (page * 25 <= caches[contractAddress].length) {
+  //   const startIndex = (page - 1) * 25;
+  //   const endIndex = startIndex + 25;
+  //   res.json(caches[contractAddress].slice(startIndex, endIndex));
+  //   console.log("cache hit");
+  //   return;
+  // }
 
   // Else fetch the data from NFTPort
   try {
@@ -58,11 +58,27 @@ const getOneCollection = async (contractAddress, page) => {
     throw err;
   }
   // Cache this array
-  response.data.nfts.forEach((nft) => {
-    caches[contractAddress].push(nft);
-  });
-  console.log(caches[contractAddress].length);
-  return response.data.nfts;
+  // response.data.nfts.forEach((nft) => {
+  //   if (nft.metadata) {
+  //     caches[contractAddress].push(nft);
+  //   } else {
+  //     console.log("No metadata for this NFT");
+  //   }
+  // });
+  // console.log(caches[contractAddress].length);
+
+  // Only return response.data.nfts if nft.metadata exists
+  return response.data.nfts
+    .filter((nft) => nft.metadata)
+    .map((nft) => ({
+      name: nft.metadata.name,
+      tokenId: nft.token_id,
+      contractAddress: contractAddress,
+      chain: "Ethereum",
+      tokenStandard: "ERC-721",
+      description: nft.metadata.description,
+      image: nft.cached_file_url,
+    }));
 };
 
 export default (app) => {

@@ -8,6 +8,10 @@ const collectionSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    encodedName: {
+      type: String,
+      required: true,
+    },
     contractAddress: {
       type: String,
       required: true,
@@ -16,7 +20,7 @@ const collectionSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    thumbnail_url: {
+    thumbnailUrl: {
       type: String,
       required: true,
     },
