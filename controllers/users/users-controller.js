@@ -25,9 +25,18 @@ const deleteUser = async (req, res) => {
   res.json(status);
 };
 
+const login = async (req, res) => {
+
+  const credentials = req.body
+  res.json(credentials)
+
+}
+
 export default (app) => {
   app.post("/api/users", createUser);
   app.get("/api/users", findUsers);
   app.put("/api/users/:userId", updateUser);
   app.delete("/api/users/:userId", deleteUser);
+
+  app.post("api/users/login", login)
 };
