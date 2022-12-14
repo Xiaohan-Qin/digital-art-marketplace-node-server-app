@@ -1,5 +1,6 @@
 import * as usersDao from "./users-dao.js";
 
+
 const createUser = async (req, res) => {
   const newUser = req.body;
   const insertedUser = await usersDao.createUser(newUser);
