@@ -1,5 +1,6 @@
 import * as usersDao from "./users-dao.js";
 
+
 const createUser = async (req, res) => {
   const newUser = req.body;
   const insertedUser = await usersDao.createUser(newUser);
@@ -24,9 +25,19 @@ const deleteUser = async (req, res) => {
   res.json(status);
 };
 
+const login = async (req, res) => {
+
+  const credentials = req.body
+  const user = await usersDao.loginUser(credentials)
+  res.json(user)
+
+}
+
 export default (app) => {
   app.post("/api/users", createUser);
   app.get("/api/users", findUsers);
   app.put("/api/users/:userId", updateUser);
   app.delete("/api/users/:userId", deleteUser);
+
+  app.post("/api/users/login", login)
 };
