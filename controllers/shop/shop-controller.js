@@ -1,86 +1,96 @@
 import axios from "axios";
 
-import caches from "../../cache/collection-cache.js";
+import * as collectionDao from "../collection/collection-dao.js";
 
 const NFTPORT_API_KEY = process.env.NFTPORT_API_KEY;
 
 /**
- * Get 25 NFTs of a certain collection
+ * Get 50 NFTs of a certain collection
  * Example client request:
- * /api/shop/0xe8be8b85a2ad7f29de32edbabb87efb109fa5b82/1
- * @param {*} req Client request with the contractAddress and page as a query param
- * @param {*} res Server response containing 25 NFTs
+ * /api/shop/azuki
  */
-const getShopPage = async (req, res) => {
-  const contractAddress = req.params.contractAddress;
-  const page = req.params.page;
+const getShop = async (req, res) => {
+  const encodedName = req.params.encodedName;
 
-  // Check if the cache has the data
-  // if (page * 25 <= caches[contractAddress].length) {
-  //   const startIndex = (page - 1) * 25;
-  //   const endIndex = startIndex + 25;
-  //   res.json(caches[contractAddress].slice(startIndex, endIndex));
-  //   console.log("cache hit");
-  //   return;
-  // }
-
-  // Else fetch the data from NFTPort
+  // Find the matching collection in the database
+  let contractAddress = "";
   try {
-    const nftArray = await getOneCollection(contractAddress, page);
-    res.json(nftArray);
+    const collection = await collectionDao.findOneCollection(encodedName);
+    if (collection) {
+      contractAddress = collection.contractAddress;
+    } else {
+      res.sendStatus(404);
+    }
   } catch (err) {
     res.status(503).json({ message: err.message });
   }
-};
 
-/**
- * Internal helper function for getShopPage
- * @returns {Array} An array of 25 NFTs
- */
-const getOneCollection = async (contractAddress, page) => {
-  let response = [];
+  // Fetch the data from NFTPort
   try {
-    response = await axios.get(`https://api.nftport.xyz/v0/nfts/${contractAddress}`, {
+    const response = await axios.get(`https://api.nftport.xyz/v0/nfts/${contractAddress}`, {
       params: {
         chain: "ethereum",
         include: "metadata",
-        page_number: page,
-        page_size: 25,
+        page_number: 1,
+        page_size: 50,
       },
       headers: {
         Authorization: `${NFTPORT_API_KEY}`,
         "Accept-Encoding": "gzip, deflate, br",
         "Content-Type": "application/json",
-        Connection: "keep-alive",
       },
     });
+    res.json(
+      response.data.nfts
+        .filter((nft) => nft.metadata) // some metadata may be null
+        .map((nft) => ({
+          name: nft.metadata.name,
+          tokenId: nft.token_id,
+          contractAddress: contractAddress,
+          chain: "Ethereum",
+          tokenStandard: "ERC-721",
+          description: nft.metadata.description,
+          image: nft.cached_file_url,
+        }))
+    );
   } catch (err) {
-    throw err;
+    res.status(err.response.status).json({ message: err.message });
+    return;
   }
-  // Cache this array
-  // response.data.nfts.forEach((nft) => {
-  //   if (nft.metadata) {
-  //     caches[contractAddress].push(nft);
-  //   } else {
-  //     console.log("No metadata for this NFT");
-  //   }
-  // });
-  // console.log(caches[contractAddress].length);
-
-  // Only return response.data.nfts if nft.metadata exists
-  return response.data.nfts
-    .filter((nft) => nft.metadata)
-    .map((nft) => ({
-      name: nft.metadata.name,
-      tokenId: nft.token_id,
-      contractAddress: contractAddress,
-      chain: "Ethereum",
-      tokenStandard: "ERC-721",
-      description: nft.metadata.description,
-      image: nft.cached_file_url,
-    }));
 };
 
+// const getOneCollection = async (contractAddress) => {
+//   let response = [];
+//   try {
+//     response = await axios.get(`https://api.nftport.xyz/v0/nfts/${contractAddress}`, {
+//       params: {
+//         chain: "ethereum",
+//         include: "metadata",
+//         page_number: 1,
+//         page_size: 25,
+//       },
+//       headers: {
+//         Authorization: `${NFTPORT_API_KEY}`,
+//         "Accept-Encoding": "gzip, deflate, br",
+//         "Content-Type": "application/json",
+//       },
+//     });
+//   } catch (err) {
+//     throw err;
+//   }
+//   return response.data.nfts
+//     .filter((nft) => nft.metadata)
+//     .map((nft) => ({
+//       name: nft.metadata.name,
+//       tokenId: nft.token_id,
+//       contractAddress: contractAddress,
+//       chain: "Ethereum",
+//       tokenStandard: "ERC-721",
+//       description: nft.metadata.description,
+//       image: nft.cached_file_url,
+//     }));
+// };
+
 export default (app) => {
-  app.get("/api/shop/:contractAddress/:page", getShopPage);
+  app.get("/api/shop/:encodedName", getShop);
 };
