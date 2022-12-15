@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import caches from "../../cache/collection-cache.js";
-
 const NFTPORT_API_KEY = process.env.NFTPORT_API_KEY;
 
 /**
@@ -13,19 +11,6 @@ const NFTPORT_API_KEY = process.env.NFTPORT_API_KEY;
  */
 const getOneProduct = async (req, res) => {
   const { contractAddress, tokenId } = req.params;
-
-  // Check if the cache has the data
-  // const result = caches[contractAddress].filter((nft) => {
-  //   return nft.token_id === tokenId;
-  // });
-  // if (result.length > 0) {
-  //   res.json(result[0]);
-  //   console.log("cache hit");
-  //   return;
-  // }
-
-  // console.log("cache miss");
-  // Else fetch the data from NFTPort since for some reason we're missing one
   try {
     const response = await axios.get(`https://api.nftport.xyz/v0/nfts/${contractAddress}/${tokenId}`, {
       params: {

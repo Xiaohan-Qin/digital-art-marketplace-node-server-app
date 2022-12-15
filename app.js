@@ -9,8 +9,6 @@ import ProductController from "./controllers/product/product-controller.js";
 
 const CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 
-// fake push
-
 try {
   mongoose.connect(CONNECTION_STRING);
   console.log("Database connection successful!");

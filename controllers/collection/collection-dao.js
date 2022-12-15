@@ -4,6 +4,10 @@ export const findAllCollections = () => {
   return collectionModel.find();
 };
 
+export const findOneCollection = (encodedName) => {
+  return collectionModel.findOne({ encodedName: encodedName });
+};
+
 export const createCollection = (collection) => {
   return collectionModel.create(collection);
 };
