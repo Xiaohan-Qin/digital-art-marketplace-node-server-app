@@ -32,7 +32,7 @@ const getShop = async (req, res) => {
         chain: "ethereum",
         include: "metadata",
         page_number: 1,
-        page_size: 50,
+        page_size: 20,
       },
       headers: {
         Authorization: `${NFTPORT_API_KEY}`,
@@ -58,38 +58,6 @@ const getShop = async (req, res) => {
     return;
   }
 };
-
-// const getOneCollection = async (contractAddress) => {
-//   let response = [];
-//   try {
-//     response = await axios.get(`https://api.nftport.xyz/v0/nfts/${contractAddress}`, {
-//       params: {
-//         chain: "ethereum",
-//         include: "metadata",
-//         page_number: 1,
-//         page_size: 25,
-//       },
-//       headers: {
-//         Authorization: `${NFTPORT_API_KEY}`,
-//         "Accept-Encoding": "gzip, deflate, br",
-//         "Content-Type": "application/json",
-//       },
-//     });
-//   } catch (err) {
-//     throw err;
-//   }
-//   return response.data.nfts
-//     .filter((nft) => nft.metadata)
-//     .map((nft) => ({
-//       name: nft.metadata.name,
-//       tokenId: nft.token_id,
-//       contractAddress: contractAddress,
-//       chain: "Ethereum",
-//       tokenStandard: "ERC-721",
-//       description: nft.metadata.description,
-//       image: nft.cached_file_url,
-//     }));
-// };
 
 export default (app) => {
   app.get("/api/shop/:encodedName", getShop);
