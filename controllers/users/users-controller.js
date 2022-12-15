@@ -28,7 +28,8 @@ const deleteUser = async (req, res) => {
 const login = async (req, res) => {
 
   const credentials = req.body
-  res.json(credentials)
+  const user = await usersDao.loginUser(credentials)
+  res.json(user)
 
 }
 
@@ -38,5 +39,5 @@ export default (app) => {
   app.put("/api/users/:userId", updateUser);
   app.delete("/api/users/:userId", deleteUser);
 
-  app.post("api/users/login", login)
+  app.post("/api/users/login", login)
 };
