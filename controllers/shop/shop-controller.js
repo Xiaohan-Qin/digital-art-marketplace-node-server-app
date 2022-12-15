@@ -5,7 +5,7 @@ import * as collectionDao from "../collection/collection-dao.js";
 const NFTPORT_API_KEY = process.env.NFTPORT_API_KEY;
 
 /**
- * Get 50 NFTs of a certain collection
+ * Get 20 NFTs of a certain collection
  * Example client request:
  * /api/shop/azuki
  */

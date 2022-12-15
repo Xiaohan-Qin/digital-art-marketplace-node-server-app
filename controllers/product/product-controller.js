@@ -5,9 +5,6 @@ const NFTPORT_API_KEY = process.env.NFTPORT_API_KEY;
 /**
  * Example client request:
  * /api/product/0xe8be8b85a2ad7f29de32edbabb87efb109fa5b82/288
- * @param {*} req Client request with the contractAddress and tokenId as query params
- * @param {*} res Server response with the NFT data
- * @returns
  */
 const getOneProduct = async (req, res) => {
   const { contractAddress, tokenId } = req.params;
@@ -40,8 +37,6 @@ const getOneProduct = async (req, res) => {
 /**
  * Example client request:
  * /api/product/tx/0xe8be8b85a2ad7f29de32edbabb87efb109fa5b82/288
- * @param {*} req Client request with the contractAddress and tokenId as query params
- * @param {*} res Server response with the sale history data
  */
 const getOneTransaction = async (req, res) => {
   const { contractAddress, tokenId } = req.params;
