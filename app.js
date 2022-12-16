@@ -1,17 +1,22 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import session from "express-session"
-
+import session from "express-session";
 
 import UsersController from "./controllers/users/users-controller.js";
 import CollectionController from "./controllers/collection/collection-controller.js";
 import ShopController from "./controllers/shop/shop-controller.js";
 import ProductController from "./controllers/product/product-controller.js";
 import SessionController from "./controllers/session/session-controller.js";
-import ReviewController from "./controllers/review/review-controller.js"
+import ReviewController from "./controllers/review/review-controller.js";
 
 const CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
+
+// Check if you're in local development or deployed on Heroku
+let origin = "http://localhost:3000";
+if (process.env.NODE_ENV === "production") {
+  origin = "https://digital-art-marketplace.herokuapp.com";
+}
 
 try {
   mongoose.connect(CONNECTION_STRING);
@@ -21,17 +26,25 @@ try {
 }
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+  })
+);
 
 // for session management
-app.set('trust proxy', 1)
-app.use(session({
-  secret: "SECRET",
-  resave: false,
-  saveUninitialized: true,
-  cookie: {secure: false}
-}))
+app.set("trust proxy", 1);
+app.use(
+  session({
+    secret: "SECRET",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
+
+app.use(express.json());
 
 UsersController(app);
 CollectionController(app);
