@@ -19,7 +19,7 @@ const findUsers = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const userId = req.params.userId;
+  const userId = new mongoose.Types.ObjectId(req.params.userId);
   const updates = req.body;
   delete updates._id;
   const updatedUser = await usersDao.updateUser(userId, updates);
@@ -27,8 +27,8 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const userIdToDelete = req.params.userId;
-  const status = await usersDao.deleteUser(userIdToDelete);
+  const userId = new mongoose.Types.ObjectId(req.params.userId);
+  const status = await usersDao.deleteUser(userId);
   res.json(status);
 };
 
@@ -47,6 +47,5 @@ export default (app) => {
   app.get("/api/users", findUsers);
   app.put("/api/users/:userId", updateUser);
   app.delete("/api/users/:userId", deleteUser);
-
   app.post("/api/users/login", login);
 };
