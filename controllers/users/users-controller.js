@@ -38,6 +38,7 @@ const login = async (req, res) => {
   if (!existingUser) {
     res.status(403).json({ message: "Invalid login credentials" });
   } else {
+    req.session["user"] = existingUser;
     res.json(existingUser);
   }
 };
