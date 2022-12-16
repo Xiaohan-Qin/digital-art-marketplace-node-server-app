@@ -54,7 +54,7 @@ const getOneTransaction = async (req, res) => {
     const parsed_transaction = {
       assetType: "Ethereum",
       price: response.data.transactions[0].price_details.price,
-      priceUsd: response.data.transactions[0].price_details.price_usd,
+      priceUsd: response.data.transactions[0].price_details.price_usd.toFixed(2),
     };
     res.json(parsed_transaction);
   } catch {
