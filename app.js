@@ -13,10 +13,10 @@ import ReviewController from "./controllers/review/review-controller.js";
 const CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 
 // Check if you're in local development or deployed on Heroku
-let origin = "http://localhost:3000";
-if (process.env.NODE_ENV === "production") {
-  origin = "https://digital-art-marketplace.herokuapp.com";
-}
+// let origin = "http://localhost:3000";
+// if (process.env.NODE_ENV === "production") {
+//   origin = "https://digital-art-marketplace.herokuapp.com";
+// }
 
 try {
   mongoose.connect(CONNECTION_STRING);
@@ -29,7 +29,8 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    // origin: "http://localhost:3000",
+    origin: "https://digital-art-marketplace.herokuapp.com",
   })
 );
 
