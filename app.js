@@ -29,8 +29,8 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    // origin: "http://localhost:3000",
-    origin: "https://digital-art-marketplace.herokuapp.com",
+    origin: "http://localhost:3000",
+    // origin: "https://digital-art-marketplace.herokuapp.com",
   })
 );
 
