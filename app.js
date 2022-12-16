@@ -9,6 +9,7 @@ import CollectionController from "./controllers/collection/collection-controller
 import ShopController from "./controllers/shop/shop-controller.js";
 import ProductController from "./controllers/product/product-controller.js";
 import SessionController from "./controllers/session/session-controller.js";
+import ReviewController from "./controllers/review/review-controller.js"
 
 const CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 
@@ -37,6 +38,7 @@ CollectionController(app);
 ShopController(app);
 ProductController(app);
 SessionController(app);
+ReviewController(app);
 
 app.get("/", (req, res) => {
   res.send("Welcome to Digital Art Marketplace Remote Server!");
