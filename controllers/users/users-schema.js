@@ -3,6 +3,19 @@ import isEmail from "validator/lib/isEmail.js";
 
 mongoose.set("strictQuery", true);
 
+const productSchema = mongoose.Schema(
+    {
+      contractAddress: {
+        type: String,
+        required: true,
+      },
+      tokenId: {
+        type: String,
+        required: true,
+      }
+    }
+);
+
 const usersSchema = mongoose.Schema(
   {
     username: {
@@ -33,6 +46,7 @@ const usersSchema = mongoose.Schema(
     },
     phone: String,
     avatar: String,
+    owned: [productSchema],  // mongoose set default as [] automatically
     numOfOwnedItem: Number,
   },
   { collection: "users" }
