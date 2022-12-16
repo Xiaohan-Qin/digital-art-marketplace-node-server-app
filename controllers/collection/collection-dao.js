@@ -8,6 +8,11 @@ export const findOneCollection = (encodedName) => {
   return collectionModel.findOne({ encodedName: encodedName });
 };
 
+// Black magic
+export const fuzzySearchCollections = (search) => {
+  return collectionModel.find({ name: { $regex: search, $options: "i" } });
+};
+
 export const createCollection = (collection) => {
   return collectionModel.create(collection);
 };
